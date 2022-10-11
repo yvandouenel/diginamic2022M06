@@ -1,4 +1,4 @@
-const h1 = window.document.getElementById("title1");
+const h1 = window.document.querySelector("#title1");
 console.log(h1);
 // Assignation d'une chaîne de caractères 
 h1.textContent += " HelloWorld";
