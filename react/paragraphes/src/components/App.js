@@ -33,10 +33,14 @@ class App extends Component {
     // modification du state
     this.setState(copy_state);
   };
-  handleSubmitAddSection = (event, title, text) => {
+  handleSubmitAddSection = (event, form_values) => {
     console.log(`Dans handleSubmitAddSection`);
+    // Déclaration et affectations des variables title et text via
+    // le "destructuring" ou la "décomposition"
+    const { title, text } = form_values;
     // Modification du state
-    this.setState((state, props) => {
+    // Ici, on utilise setState avec la fonction de callback qui nous donne automatiquement une copie du state en premier paramètre
+    this.setState((state) => {
       state.sections.push({
         id: state.sections.length + 1,
         title: title,
