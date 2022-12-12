@@ -16,11 +16,36 @@ function App() {
     ]);
   }, []);
 
+  /**
+   * Gère le click sur le bouton supprimer
+   * Utilisation de la méthode filter : si l'index de la tâche cliquée correspond à l'index de la tâche, cette dernière ne passe pas le filtre
+   * Appel du mutateur de l'état tasks "setTasks"
+   * @param {Number} index
+   */
+  const handleClickDeleteTask = (index) => {
+    console.log(`Dans handleClickDeleteTask`);
+    setTasks(tasks.filter((task, i) => i != index));
+  };
+  const handleClickValidateTask = (index) => {
+    console.log(`Dans handleClickValidateTask`);
+    setTasks(
+      tasks.map((task, i) => {
+        if (i == index) task.is_validate = !task.is_validate;
+        return task;
+      })
+    );
+  };
   return (
     <div className="App container">
       <h1>Liste des tâches</h1>
       {tasks.map((task, index) => (
-        <Task task={task} key={task.id} />
+        <Task
+          task={task}
+          key={task.id}
+          handleClickDeleteTask={handleClickDeleteTask}
+          handleClickValidateTask={handleClickValidateTask}
+          index={index}
+        />
       ))}
     </div>
   );
