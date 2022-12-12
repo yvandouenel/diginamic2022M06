@@ -63,7 +63,7 @@ class App extends Component {
   render() {
     return (
       <div className="App container">
-        <h1 className="mt-4">Exercice des paragraphes</h1>
+        <h1 className="mt-4">Exercice des paragraphes {this.props.toto}</h1>
         <FormAddSection handleSubmitAddSection={this.handleSubmitAddSection} />
 
         {/* Affichage du formulaire de modification d'une section */}
