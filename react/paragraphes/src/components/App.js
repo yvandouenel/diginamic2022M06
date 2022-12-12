@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FormAddSection from "./FormAddSection";
+import FormEditSection from "./FormEditSection";
 import Section from "./Section";
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
           text_visible: false,
         },
       ],
+      form_update_is_visible: false,
     };
   }
   handleClickTitle = (event, index) => {
@@ -32,6 +34,14 @@ class App extends Component {
       !copy_state.sections[index].text_visible;
     // modification du state
     this.setState(copy_state);
+  };
+  handleClickEditButton = (event) => {
+    console.log(`Dans handleClickEditButton`);
+    // Modification de form_update_is_visible du state local
+    this.setState((state) => {
+      state.form_update_is_visible = !state.form_update_is_visible;
+      return state;
+    });
   };
   handleSubmitAddSection = (event, form_values) => {
     console.log(`Dans handleSubmitAddSection`);
@@ -55,12 +65,17 @@ class App extends Component {
       <div className="App container">
         <h1 className="mt-4">Exercice des paragraphes</h1>
         <FormAddSection handleSubmitAddSection={this.handleSubmitAddSection} />
+
+        {/* Affichage du formulaire de modification d'une section */}
+        {this.state.form_update_is_visible && <FormEditSection />}
+
         {/* Rendu des sections */}
         {this.state.sections.map((section, index) => (
           <Section
             key={section.id}
             section={section}
             handleClickTitle={this.handleClickTitle}
+            handleClickEditButton={this.handleClickEditButton}
             index={index}
           />
         ))}
