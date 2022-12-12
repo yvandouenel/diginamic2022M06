@@ -33,11 +33,24 @@ class App extends Component {
     // modification du state
     this.setState(copy_state);
   };
+  handleSubmitAddSection = (event, title, text) => {
+    console.log(`Dans handleSubmitAddSection`);
+    // Modification du state
+    this.setState((state, props) => {
+      state.sections.push({
+        id: state.sections.length + 1,
+        title: title,
+        text: text,
+        text_visible: false,
+      });
+      return state;
+    });
+  };
   render() {
     return (
       <div className="App container">
         <h1 className="mt-4">Exercice des paragraphes</h1>
-        <FormAddSection />
+        <FormAddSection handleSubmitAddSection={this.handleSubmitAddSection} />
         {/* Rendu des sections */}
         {this.state.sections.map((section, index) => (
           <Section
