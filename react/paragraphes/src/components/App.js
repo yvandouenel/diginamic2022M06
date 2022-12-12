@@ -22,6 +22,7 @@ class App extends Component {
         },
       ],
       form_update_is_visible: false,
+      current_update_section: -1,
     };
   }
   handleClickTitle = (event, index) => {
@@ -35,13 +36,13 @@ class App extends Component {
     // modification du state
     this.setState(copy_state);
   };
-  handleClickEditButton = (event) => {
+  handleClickEditButton = (event, index) => {
     console.log(`Dans handleClickEditButton`);
     // Modification de form_update_is_visible du state local
-    this.setState((state) => {
-      state.form_update_is_visible = !state.form_update_is_visible;
-      return state;
-    });
+    this.setState((previous_state) => ({
+      form_update_is_visible: !previous_state.form_update_is_visible,
+      current_update_section: index,
+    }));
   };
   handleSubmitAddSection = (event, form_values) => {
     console.log(`Dans handleSubmitAddSection`);
@@ -60,15 +61,33 @@ class App extends Component {
       return state;
     });
   };
+  handleSubmitEditSection = (event, title, text) => {
+    console.log(`dans handleSubmitEditSection`);
+    this.setState({
+      sections: this.state.sections.map((section, i) => {
+        if (i == this.state.current_update_section) {
+          section.title = title;
+          section.text = text;
+        }
+        return section;
+      }),
+      form_update_is_visible: false,
+      current_update_section: -1,
+    });
+  };
   render() {
     return (
       <div className="App container">
         <h1 className="mt-4">Exercice des paragraphes {this.props.toto}</h1>
         <FormAddSection handleSubmitAddSection={this.handleSubmitAddSection} />
-
         {/* Affichage du formulaire de modification d'une section */}
-        {this.state.form_update_is_visible && <FormEditSection />}
-
+        Section à modifier : {this.state.current_update_section}
+        {this.state.form_update_is_visible && (
+          <FormEditSection
+            section={this.state.sections[this.state.current_update_section]}
+            handleSubmitEditSection={this.handleSubmitEditSection}
+          />
+        )}
         {/* Rendu des sections */}
         {this.state.sections.map((section, index) => (
           <Section

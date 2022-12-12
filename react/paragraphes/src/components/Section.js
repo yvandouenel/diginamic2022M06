@@ -16,7 +16,7 @@ const Section = (props) => {
         <button
           onClick={(event) => {
             // appel du gestionnaire d'événemet qui a pour but d'afficher un formulaire
-            props.handleClickEditButton();
+            props.handleClickEditButton(event, props.index);
           }}
           className="btn btn-warning"
         >
