@@ -1,0 +1,55 @@
+import React, { Component } from "react";
+import FormAddSection from "./FormAddSection";
+import Section from "./Section";
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sections: [
+        {
+          id: 1,
+          title: "Titre 1",
+          text: "Texte du paragraphe 1",
+          text_visible: true,
+        },
+        {
+          id: 2,
+          title: "Titre 2",
+          text: "Texte du paragraphe 2",
+          text_visible: false,
+        },
+      ],
+    };
+  }
+  handleClickTitle = (event, index) => {
+    console.log(`Dans handleClickTitle`);
+    // Il faut maintenant changer le state pour la section qui contient
+    // le titre cliqué
+    const copy_state = { ...this.state };
+    // Modification de la copie
+    copy_state.sections[index].text_visible =
+      !copy_state.sections[index].text_visible;
+    // modification du state
+    this.setState(copy_state);
+  };
+  render() {
+    return (
+      <div className="App container">
+        <h1 className="mt-4">Exercice des paragraphes</h1>
+        <FormAddSection />
+        {/* Rendu des sections */}
+        {this.state.sections.map((section, index) => (
+          <Section
+            key={section.id}
+            section={section}
+            handleClickTitle={this.handleClickTitle}
+            index={index}
+          />
+        ))}
+      </div>
+    );
+  }
+}
+
+export default App;

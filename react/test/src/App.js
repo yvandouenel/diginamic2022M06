@@ -8,14 +8,28 @@ class App extends Component {
     // Stat est ici une propriété de type objet
     this.state = {
       tasks: [
-        { title: "Apprendre Reactjs", id: 1 },
-        { title: "Acheter des chaussures", id: 2 },
-        { title: "Acheter du pain", id: 3 },
+        { title: "Apprendre Reactjs", id: 1, is_validate: false },
+        { title: "Acheter des chaussures", id: 2, is_validate: false },
+        { title: "Acheter du pain", id: 3, is_validate: false },
       ],
       display_form: false,
     };
     console.log(`Dans le constructeur`);
   }
+  handleSubmitAddTask = (task_title) => {
+    // this sera forcément l'instance de APP
+    console.log(`Dans handleSubmitAddTask`);
+
+    // copie du state
+    const copy_state = { ...this.state };
+    copy_state.tasks.unshift({
+      title: task_title,
+      id: copy_state.tasks.length + 1,
+      is_validate: false,
+    });
+    copy_state.display_form = false;
+    this.setState(copy_state);
+  };
   componentDidMount() {
     console.log(`Dans componentDidMount`);
     // Modification du state
@@ -34,6 +48,13 @@ class App extends Component {
       this.setState({ ...this.state, tasks: new_tasks });
     }, 3000);
   }
+  handleClickValidateTask = (event, index) => {
+    console.log(`Dans handleClickValidateTask`);
+    // Il faut que je modifie le state et en particulier is_validate de la tâche qui correspond au bouton
+    const copy_state = { ...this.state };
+    copy_state.tasks[index].is_validate = !copy_state.tasks[index].is_validate;
+    this.setState(copy_state);
+  };
   render() {
     console.log(`Dans render`);
     return (
@@ -51,10 +72,18 @@ class App extends Component {
         >
           Ajouter une tâche
         </button>
-        {this.state.display_form && <FormAddTask />}
-        {this.state.tasks.map((task) => (
+        {this.state.display_form && (
+          <FormAddTask handleSubmitAddTask={this.handleSubmitAddTask} />
+        )}
+        {this.state.tasks.map((task, index) => (
           /* Equivalent à new Task(task.title) */
-          <Task key={task.id} title={task.title} />
+          <Task
+            key={task.id}
+            title={task.title}
+            is_validate={task.is_validate}
+            handleClickValidateTask={this.handleClickValidateTask}
+            index={index}
+          />
         ))}
       </div>
     );
