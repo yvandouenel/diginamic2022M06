@@ -1,19 +1,50 @@
+import Coopernet from "./../services/Coopernet";
 import { useState, useEffect } from "react";
 import Task from "./Task";
-const initial_value = [{ title: "Faire le ménage", id: 0, is_validate: false }];
+
+const initial_value = [];
 function App() {
   // Déclare une nouvelle variable d'état, que l'on va appeler « count »
   // useState renvoie un tableau. Le premier élément de ce dernier est un état et le deuxième élément est une référence vers la fonction qui permet de modifier cet état.
   const [tasks, setTasks] = useState(initial_value);
+  const fetchTask = async () => {
+    // Récupération des tâches :
+    const server_tasks = await Coopernet.getTasks();
+    console.log(`tasks récupérées sur le serveur : `, server_tasks);
 
+    // Modification du state tasks
+    setTasks(server_tasks);
+  };
   // Equivalent du componentDidMount si le deuxième paramètre de useEffect est []
   useEffect(() => {
-    document.title = `Test de useEffect`;
-    // Ajout d'une tâche dans le state "tasks"
-    setTasks([
-      ...tasks,
-      { title: "Faire du sport", id: 1, is_validate: false },
-    ]);
+    const testLocalStorageToken = async () => {
+      try {
+        if (await Coopernet.getStorage()) {
+          console.log(
+            `Je suis dans le cas où mon local storage me permet de me connecter`
+          );
+          await fetchTask();
+        } else {
+          // Je modifie le login et le mot de passe
+          // Il faudra faire en sorte d'appeler ici le component de formulaire
+          // de login
+          Coopernet.setUsername("y");
+          Coopernet.setPassword("y");
+          await Coopernet.setOAuthToken();
+          // Si ce code est exécuté, c'est que je suis bien connecté
+          console.log(
+            `Je suis maintenant bien connecté au serveur de Coopernet`
+          );
+          // Récupération des tâches :
+          await fetchTask();
+        }
+      } catch (error) {
+        // Ici, il faudrait afficher dans l'interface qu'il y a eu une erreur
+        // d'identification et donner un email de l'administrateur par exemple
+        console.error("Erreur attrapée : " + error);
+      }
+    };
+    testLocalStorageToken();
   }, []);
 
   /**
@@ -24,6 +55,10 @@ function App() {
    */
   const handleClickDeleteTask = (index) => {
     console.log(`Dans handleClickDeleteTask`);
+
+    // Teste si l'index de la tâche est bien différent
+    // de l'index de la tâche qui contient le bouton supprimer
+    // sur lequel l'internaute a cliqué
     setTasks(tasks.filter((task, i) => i != index));
   };
   const handleClickValidateTask = (index) => {
@@ -41,7 +76,7 @@ function App() {
       {tasks.map((task, index) => (
         <Task
           task={task}
-          key={task.id}
+          key={Math.random() * 100000}
           handleClickDeleteTask={handleClickDeleteTask}
           handleClickValidateTask={handleClickValidateTask}
           index={index}

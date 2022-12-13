@@ -2,13 +2,13 @@ const Task = (props) => {
   return (
     <section className="d-flex justify-content-between">
       <h2
-        className={props.task.is_validate ? "text-decoration-line-through" : ""}
+        className={props.task.isValidate ? "text-decoration-line-through" : ""}
       >
-        {props.task.title}
+        {props.task.label}
       </h2>
       <div>
         <button
-          onClick={(event) => {
+          onClick={() => {
             props.handleClickValidateTask(props.index);
           }}
           className="btn btn-success me-3"
